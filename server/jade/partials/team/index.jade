@@ -37,10 +37,10 @@
       span(data-ng-if='!player.matchup.isBye') {{player.matchup.status}}
   | </script>
   .dropdown
-    a(href='javascript:;',title='{{rosterCtrl.data.owner.firstName}} {{rosterCtrl.data.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.title
-      span {{masterCtrl.team.name}}
+    a(href='javascript:;',title='{{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.title.mgn-bottom-0
+      span {{masterCtrl.member.team.name}}
       span.caret.mgn-left-5
-    h2.float-right.text-muted.mgn-top-0 {{masterCtrl.team.abbr}}
+    h2.float-right.text-muted.mgn-top-0.mgn-bottom-0 {{masterCtrl.member.team.abbr}}
     ul.dropdown-menu.mgn-top-0
       li(data-ng-repeat='member in masterCtrl.members', data-ng-class='{true:"active",false:""}[masterCtrl.team.id == member.team.id]')
         a(href='javascript:;',data-ng-click='masterCtrl.onMemberSelected(member)').text-no-wrap
@@ -49,6 +49,8 @@
           .float-left.italics.pad-left-5 [{{member.team.abbr}}]
           .clearfix
     .clearfix
+  .line-height-20.mgn-bottom-3
+    span.color-fff.mgn-left-10 {{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}
   .panel.panel-default
     .panel-heading
       .float-left Starters
@@ -58,15 +60,15 @@
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
         tr(ng-include="'playerHeader.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isQB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isRB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isFlex', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isWR', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isLB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isDL', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isDB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isK', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.starters | isDST', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isQB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isRB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isFlex', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isWR', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isLB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDL', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isK', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDST', ng-include="'playerRow.html'")
   .panel.panel-default
     .panel-heading
       .float-left Bench
@@ -76,13 +78,13 @@
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
         tr(ng-include="'playerHeader.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isQB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isRB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isWR', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isLB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isDL', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isDB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isK', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isP', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.data.roster.bench | isDST', ng-include="'playerRow.html'")
-        tr(data-ng-if='rosterCtrl.data.roster.bench.length === 0', ng-include="'vacantBench.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isQB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isRB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isWR', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isLB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDL', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDB', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isK', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isP', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDST', ng-include="'playerRow.html'")
+        tr(data-ng-if='rosterCtrl.team.roster.bench.length === 0', ng-include="'vacantBench.html'")

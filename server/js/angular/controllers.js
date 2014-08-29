@@ -2,25 +2,25 @@
   'use strict';
   angular
     .module('ngApp')
-    .controller('Master_Controller', ['$routeParams', '$rootScope', '$location', function($routeParams, $rootScope, $location) {
+    .controller('Master_Controller', ['$routeParams', '$rootScope', '$location', 'UiService', function($routeParams, $rootScope, $location, UiService) {
       var vm = this;
       $rootScope.$on('settingsLoaded', function(event, data){
-        vm.settings = data;
-        vm.settings.leagueName = _(data.settings.basic).findWhere({key:'LeagueName'}).value;
+        vm.settings = UiService.current.settings;
+        vm.settings.leagueName = _(UiService.current.settings.basic).findWhere({key:'LeagueName'}).value;
       });
       $rootScope.$on('membersLoaded', function(event, data){
-        vm.members = data;
+        vm.members = UiService.current.members;
       });
-      $rootScope.$on('teamLoaded', function(event, data){
-        vm.team = data;
+      $rootScope.$on('memberLoaded', function(event, data){
+        vm.member = UiService.current.member;
       });
 
       vm.onMemberSelected = function(member){
-        vm.team = member.team;
+        vm.member = member;
         $location.path('/' + [$routeParams.league, $routeParams.season, member.team.id, 'roster'].join('/'));
       };
     }])
-    .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, EspnFflService, RosterService) {
+    .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'UiService', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, UiService, EspnFflService, RosterService) {
       var vm = this;
       vm.errors = [];
       vm.isWorking = true;
@@ -32,7 +32,7 @@
       });
 
       async.parallel({
-        getOwnerRoster: function(callback){
+        getRoster: function(callback){
           RosterService.Get({
             league:$routeParams.league,
             season:$routeParams.season,
@@ -43,7 +43,11 @@
             return callback({reason: 'Could not retrieve roster information at this time. Please try back later.'});
           });
         },
-        getLeagueSettings: function(callback){
+        getSettings: function(callback){
+          if(UiService.current.settings){
+            return callback(null, UiService.current);
+          }
+
           EspnFflService.Get({
             league:$routeParams.league,
             season:$routeParams.season,
@@ -54,9 +58,9 @@
             return callback({reason: 'Could not retrieve league settings information at this time. Please try back later.'});
           });
         },
-        getLeagueMembers: function(callback){
-          if($scope.masterCtrl.members){
-            return callback(null, $scope.masterCtrl.members);
+        getMembers: function(callback){
+          if(UiService.current.members){
+            return callback(null, UiService.current);
           }
 
           EspnFflService.Get({
@@ -75,20 +79,22 @@
           return;
         }
 
-        vm.data = results.getOwnerRoster;
-        vm.settings = results.getLeagueSettings;
-        vm.members = results.getLeagueMembers.members;
-        $rootScope.$broadcast('teamLoaded', results.getOwnerRoster.team);
-        $rootScope.$broadcast('settingsLoaded', results.getLeagueSettings);
-        if(!$scope.masterCtrl.members){
-          $rootScope.$broadcast('membersLoaded', results.getLeagueMembers.members);
-        }
-        vm.populateEmptyRosterSlots(vm.data.roster.starters, vm.settings);
+        vm.team = UiService.current.team = results.getRoster.team;
+        vm.roster = UiService.current.roster = results.getRoster.roster;
+        vm.settings = UiService.current.settings = results.getSettings.settings;
+        vm.members = UiService.current.members = results.getMembers.members;
+        vm.member = UiService.current.member = _(results.getRoster).pick('team', 'owner');
+
+        $rootScope.$broadcast('memberLoaded', UiService.current.member);
+        $rootScope.$broadcast('settingsLoaded', UiService.current.settings);
+        $rootScope.$broadcast('membersLoaded', UiService.current.members);
+
+        vm.populateEmptyRosterSlots(vm.roster.starters, vm.settings);
         vm.isWorking = false;
       });
 
-      vm.populateEmptyRosterSlots = function(actualStarters, leagueSettings){
-        var starterSlots = _(leagueSettings.settings.roster).filter(function(rs){
+      vm.populateEmptyRosterSlots = function(actualStarters, settings){
+        var starterSlots = _(settings.roster).filter(function(rs){
           return ["QB","RB","RB/WR","TE","LB","DL","DB","K","P", "D/ST"]
             .indexOf(rs.key.toUpperCase()) > -1;
         });

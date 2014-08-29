@@ -20,5 +20,18 @@
           isArray: false
         }
       });
+    }])
+    .factory('UiService', [function($resource) {
+      return {
+        current: {
+          leagueId: -1,
+          seasonId: -1,
+          teamId: -1,
+          roster: null,
+          settings: null,
+          members: null,
+          member: null
+        }
+      };
     }]);
 })();
