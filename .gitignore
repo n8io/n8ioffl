@@ -3,7 +3,5 @@ node_modules
 dist
 logs
 *.sublime-*
-client/**/*
-client/*
 server/config/config.*.json
 !server/config/config.base.json
