@@ -16,18 +16,21 @@
   td(data-ng-if='player.id') {{player.fantasyPosition}}
   td(data-ng-if='player.id')
     .float-left.text-center.width-30.hidden-xs
-      img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').height-25
+      img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
       div(data-ng-if='!!!player.team')
     a(href='javascript:;',data-player-id='{{player.id}}').float-left.mgn-left-5
       | {{player.name}}
     span.text-muted.pad-left-5.italic.float-left.hidden-xs {{player.position}} {{player.team}}
+    .float-right(data-ng-if='player.id && player.matchup && !player.matchup.isBye').text-muted
+      span(data-ng-if='!player.matchup.isHome') @
+      span(data-ng-if='player.matchup.isHome') vs
     .clearfix
   td(colspan="2",data-ng-if='player.id && !player.matchup')
   td(data-ng-if='player.id && player.matchup').text-center
     span(data-ng-if='player.matchup.isBye') -BYE-
     span(data-ng-if='!player.matchup.isBye')
       a(href='javascript:;')
-        img(data-ng-src='/img/logos/{{player.matchup.opponent.toLowerCase()}}.svg', title='{{player.matchup.opponent}}').height-25
+        img(data-ng-src='/img/logos/{{player.matchup.opponent.toLowerCase()}}.svg', title='{{player.matchup.opponent}}').nfl-team-logo
   td(data-ng-if='player.id && player.matchup').text-center
     span(data-ng-if='player.matchup').font-size-small
       span(data-ng-if='player.matchup.isBye') --

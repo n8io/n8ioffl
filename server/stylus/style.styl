@@ -20,6 +20,8 @@ a
   text-shadow 1px 1px #eee
   &:hover,&:focus,&:active
     text-decoration none
+  @media(max-width:500px)
+    font-size 80%
 
 .ip-header
   background-color $splash-bg-color
@@ -48,6 +50,13 @@ table.table-player
           font-size 80%
           * img
             height 22px
+
+.nfl-team-logo
+  max-height 25px
+  max-width 25px
+  @media(max-width:500px)
+    max-height 22px
+    max-width 22px
 
 img.main-logo
   margin 0 auto
