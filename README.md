@@ -3,5 +3,3 @@
 
 ## Startup
 grunt watcher | ./node_modules/.bin/bunyan
-
-Can you dig it?
