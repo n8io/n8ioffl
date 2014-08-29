@@ -1,0 +1,14 @@
+block header-meta
+  - var favIconUrl = '/img/favicon.png'
+  - var openGraphTags = openGraphTags ||  { /*site_name: '', title: '', url: '', image: '', favicon: favIconUrl, description: '' */ }
+  meta(charset='utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  meta(name='description', content='')
+  meta(name='author', content='#{author}')
+  - each val, key in openGraphTags
+    meta(property='og:'+'#{key}', content='#{val}')
+  link(rel='shortcut icon', type='image/x-icon', href='#{favIconUrl}')
+  link(rel='apple-touch-icon-precomposed', href='#{favIconUrl}')
+  link(rel='apple-touch-icon', href='#{favIconUrl}')
+  link(rel='dns-prefetch',href='//ajax.googleapis.com')
+  link(rel='dns-prefetch',href='//fonts.googleapis.com')

@@ -1,0 +1,67 @@
+{
+  "app": {
+    "name": "n8ioffl",
+    "host": "0.0.0.0",
+    "port": 3000,
+    "cdnVendorRoot": "",
+    "cdnAppRoot": "",
+    "maxSockets": 25,
+    "express": {
+      "logFormat": "tiny"
+    }
+  },
+  "database": {
+    "mongoose": {
+      "uri":""
+    }
+  },
+  "services":{
+    "defaultTimeout": 10000,
+    "espnffl": {
+      "uri": "http://espnffl.herokuapp.com",
+      "apiKey": ""
+    }
+  },
+  "tracking": {
+    "google": {
+      "account": ""
+    }
+  },
+  "displayConfig": {
+    "enabled": false,
+    "key": ""
+  },
+  "session":{
+    "keys": ["IlovemesomeCATZ"]
+  },
+  "logging": {
+    "console": {
+      "enabled": true,
+      "level": "info"
+    },
+    "file": {
+      "enabled": false,
+      "level": "info",
+      "type": "rotating-file",
+      "path": "../logs/log.log",
+      "period": "1d",
+      "count": 3
+    },
+    "loggly": {
+      "enabled": false,
+      "secret": "",
+      "subdomain": ""
+    }
+  },
+  "__required": [
+    "app:name",
+    "app:host",
+    "app:port",
+    "app:maxSockets",
+    "session:keys",
+    "services:defaultTimeout",
+    "session:keys",
+    "services:espnffl:uri",
+    "services:espnffl:apiKey"
+  ]
+}

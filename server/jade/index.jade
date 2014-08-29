@@ -1,0 +1,15 @@
+extends ./_layouts/master
+
+append body-header
+  .title
+    span.float-left {{masterCtrl.settings.leagueName}}
+    .clearfix
+append body-content
+  .col-md-12(data-ng-if='masterCtrl.logoUrl').hidden
+    img(data-ng-src='{{masterCtrl.logoUrl}}').img-responsive.img-rounded.main-logo
+  div(data-ng-view)
+append body-scripts
+  script(src='/js/modernizr.custom.js')
+  script(src='/js/classie.js')
+  script(src='/js/pathLoader.js')
+  script(src='/js/main.js')

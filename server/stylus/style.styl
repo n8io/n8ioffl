@@ -1,0 +1,57 @@
+@import "effect1"
+@import "variables"
+@import "mixins"
+@import "bootstrap-overrides"
+@import "nfl"
+
+body
+  background $body-bg-color
+  font-family 'Bevon', sans-serif
+a
+  color $link-color
+  text-decoration none
+  &:hover,&:focus,&:active
+    color darken($link-color, 15%)
+    text-decoration underline
+
+.lobster
+  font-family 'Lobster', cursive
+.lobster.title
+  text-shadow 1px 1px #eee
+  &:hover,&:focus,&:active
+    text-decoration none
+
+.ip-header
+  background-color $splash-bg-color
+
+.ip-header .ip-loader svg path.ip-loader-circlebg
+  stroke $splash-bg-color
+
+.ip-header .ip-loader svg path.ip-loader-circle
+  stroke #fff
+
+.header,.footer
+  color #fff
+  background-color $color-primary
+.header
+  .title
+    line-height 40px
+    font-size 1.2em
+
+table.table-player
+  thead,tbody
+    tr
+      td
+        line-height 25px
+        @media(max-width:500px)
+          line-height 20px
+          font-size 80%
+
+img.main-logo
+  margin 0 auto
+  height 125px
+  background rgba(#fff, .3)
+  border 2px solid #888
+
+.width-initial
+  width initial!important

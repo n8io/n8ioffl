@@ -1,0 +1,304 @@
+//- Custom Css Mixins
+
+// Used to build out custom 'bootstrappy' button css
+bootstrap-button($suffix,$color,$topColor,$bottomColor=null)
+  $bottomColor = $bottomColor || darken($topColor,5%)
+  .btn-{$suffix}
+    color $color
+    background-color darken($topColor,2.5%)
+    background-image linear-gradient($topColor,$bottomColor)
+    background-repeat repeat-x
+    border-color darken($bottomColor,5%)
+    &:hover
+    &:focus
+      border-color darken($bottomColor,5%)
+      background-color $bottomColor
+      background-position 0 -15px
+    &:active
+    .active
+      background-color $bottomColor
+      border-color darken($bottomColor,5%)
+  .btn-{$suffix}[disabled]
+    background-color darken($topColor,2.5%)
+    border-color darken($bottomColor,5%)
+  .open
+    .dropdown-toggle.btn-{$suffix}
+      background-color darken($topColor,10%)
+      border-color darken($topColor,20%)
+
+// Used as a lengthy text, ellipsis replacement
+fade-overflow($suffix='medium',$startColor=rgba(0,0,0,0),$endColor=#fff)
+  .fade-overflow-{$suffix}
+    position relative
+    overflow-x hidden!important
+    white-space nowrap!important
+    &:after
+      display block
+      position absolute
+      top 0
+      right 0
+      bottom 0
+      background linear-gradient(to right, $startColor, $endColor)
+      width 50px
+      content ""
+
+// Makes css transition creation easy
+transition($cssProperty=all, $transitionDuration=250ms, $transitionFunction=ease, $transitionDelay=false)
+  -webkit-transition $cssProperty $transitionDuration $transitionFunction ($transitionDelay ? $transitionDelay : null)
+  -moz-transition $cssProperty $transitionDuration $transitionFunction ($transitionDelay ? $transitionDelay : null)
+  -ms-transition $cssProperty $transitionDuration $transitionFunction ($transitionDelay ? $transitionDelay : null)
+  -o-transition $cssProperty $transitionDuration $transitionFunction ($transitionDelay ? $transitionDelay : null)
+  transition $cssProperty $transitionDuration $transitionFunction ($transitionDelay ? $transitionDelay : null)
+
+// Eliminates text selection on elements
+user-select($type=none)
+  -webkit-touch-callout $type
+  -webkit-user-select $type
+  -khtml-user-select $type
+  -moz-user-select $type
+  -ms-user-select $type
+  user-select $type
+
+// Used to build out global padding, margin classes
+provision-attribute($attr,$abbr)
+  for $n in 0..20
+    .{$abbr}-{$n*5}
+      {$attr}: ($n*5px);
+    .{$abbr}-{$n*5}-important
+      {$attr}: ($n*5px)!important;
+    for $s in top right bottom left
+      .{$abbr}-{$s}-{$n*5}
+        {$attr}-{$s}: ($n*5px);
+      .{$abbr}-{$s}-{$n*5}-important
+        {$attr}-{$s}: ($n*5px)!important;
+  for $m in 1..4
+    .{$abbr}-{$m}
+      {$attr}: ($m*1px);
+    .{$abbr}-{$m}-important
+      {$attr}: ($m*1px)!important;
+    for s in top right bottom left
+      .{$abbr}-{$s}-{$m}
+        {$attr}-{s}: ($m*1px);
+      .{$abbr}-{s}-{$m}-important
+        {$attr}-{s}: ($m*1px)!important;
+
+// Builds out some static widths up to 300px
+provision-widths()
+  for $n in 0..60
+    .width-{$n*5}
+      width ($n*5px)
+    .width-{$n*5}-important
+      width ($n*5px)!important
+  for $n in 0..20
+    .width-{$n*5}pct
+      width ($n*5%)
+    .width-{$n*5}pct-important
+      width ($n*5%)!important
+
+// Builds out some static heights up to 100px
+provision-heights()
+  for $n in 0..20
+    .height-{$n*5}
+      height ($n*5px)
+    .height-{$n*5}-important
+      height ($n*5px)!important
+  for $n in 0..20
+    .height-{$n*5}pct
+      height ($n*5%)
+    .height-{$n*5}pct-important
+      height ($n*5%)!important
+
+// Collection of helper classes that make dev easier
+misc()
+  .hide,.hidden
+    display none
+  .invisible
+    visibility hidden
+  .text-align-left,.align-left
+    text-align left
+  .text-align-center,.align-center
+    text-align center
+  .text-align-right,.align-right
+    text-align right
+  .strong,.bold
+    font-weight bold
+  .bolder
+    font-weight bolder
+  .italic,.italics
+    font-style italic
+  .cursor-default
+    cursor default
+  .cursor-pointer
+    cursor pointer
+  .cursor-grab
+    cursor url('//www.google.com/intl/en_ALL/mapfiles/openhand.cur'), move
+  .cursor-grabbing
+    cursor move
+    cursor grabbing
+    cursor -moz-grabbing
+    cursor -webkit-grabbing
+    cursor url('//www.google.com/intl/en_ALL/mapfiles/closedhand.cur'), move
+  .display-block,.block,.show
+    display block
+  .display-inline-block,.inline-block
+    display inline-block
+  .dispaly-inline,.inline
+    display inline
+  .display-table
+    display table
+  .display-full-window
+    z-index 999999998
+    position fixed!important
+    top 0
+    left 0
+    right 0
+    bottom 0
+    height 100% !important
+  for $n in 0..18
+    .line-height-{($n*5)+10}
+      line-height ($n*5)+10px
+  input.ng-invalid.ng-dirty
+    border-color #a94442
+    &:focus
+      box-shadow 0 0 6px lighten(#a94442,5%)
+  .no-underline
+    text-decoration none!important
+    &:hover,&:active,&:focus
+      text-decoration none!important
+  .position-relative
+    position relative
+  .position-absolute
+    position absolute
+  .position-normal
+    position inherit
+  .mgn-0-auto
+    margin 0 auto
+  .center-x-y-parent
+    -webkit-transform-style preserve-3d
+  .center-x-y
+    top 50%
+    left 50%
+    transform(translateX(-50%) translateY(-50%))
+  .center-x
+    left 50%
+    transform(translateX(-50%))
+  .center-y
+    top 50%
+    transform(translateY(-50%))
+  .opacity-0
+    opacity .0
+  .opacity-50
+    opacity .5
+  .opacity-100
+    opacity 1
+  .color-fff,.color-white
+    color #FFF
+  .color-000,.color-black
+    color #000
+  .clearfix
+    clearfix()
+  .no-outline
+    outline none!important
+    &:hover,&:active,&:focus
+      outline none!important
+  .no-border
+    border none!important
+  .text-shadow
+    text-shadow 1px 1px 3px rgba(0,0,0,.25)
+  .text-no-wrap
+    overflow hidden
+    white-space nowrap
+  .text-ellipsis
+    position relative
+    overflow-x hidden!important
+    white-space nowrap!important
+    text-overflow ellipsis
+  .font-size-tiny
+    font-size .5em
+  .font-size-small
+    font-size .75em
+  .font-size-medium,.font-size-normal
+    font-size 1em
+  .font-size-large
+    font-size 1.25em
+  .font-size-huge
+    font-size 1.5em
+  .float-left,.pull-left
+    float left
+  .float-right,.pull-right
+    float right
+  for $n in 0..16
+    .transition-all-{200+($n*50)}-ease
+      transition(all,200+($n*50)ms,ease)
+  .spin-infinite
+    -webkit-transform-origin center center
+    -moz-transform-origin center center
+    -ms-transform-origin center center
+    transform-origin center center
+    -webkit-animation spin 1s linear infinite
+    -moz-animation spin 1s linear infinite
+    -ms-animation spin 1s linear infinite
+    animation spin 1s linear infinite
+  @css {
+    @-webkit-keyframes spin
+    {
+      from { -webkit-transform: rotate(0deg); }
+      50%  { -webkit-transform: rotate(180deg); }
+      to   { -webkit-transform: rotate(360deg); }
+    }
+    @-moz-keyframes spin
+    {
+      from { -moz-transform: rotate(0deg); }
+      50%  { -moz-transform: rotate(180deg); }
+      to   { -moz-transform: rotate(360deg); }
+    }
+    @-ms-keyframes spin
+    {
+      from { -ms-transform: rotate(0deg); }
+      50%  { -ms-transform: rotate(180deg); }
+      to   { -ms-transform: rotate(360deg); }
+    }
+    @keyframes spin
+    {
+      from { transform: rotate(0deg); }
+      50%  { transform: rotate(180deg); }
+      to   { transform: rotate(360deg); }
+    }
+  }
+  .social-google-plus-red
+    color #D83824 !important
+  .social-facebook-blue
+    color #4862A3 !important
+  .social-twitter-blue
+    color #00ACEE !important
+  .user-select-none
+    user-select()
+  .overflow-hidden,.overflow-hide
+    overflow hidden
+  .overflow-visible,.overflow-show
+    overflow visible
+  .overflow-hidden-y,.overflow-hide-y
+    overflow-y hidden
+  .overflow-visible-y,.overflow-show-y
+    overflow-y visible
+  .overflow-hidden-x,.overflow-hide-x
+    overflow-x hidden
+  .overflow-visible-x,.overflow-show-x
+    overflow-x visible
+  .overflow-auto
+    overflow auto
+  .overflow-scroll
+    overflow scroll
+  .min-height-0
+    min-height 0
+
+// ###########################################################
+//- DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU ARE DOING
+// ###########################################################
+
+//-Build out margins, paddings, and widths programmatically from mixins
+provision-attribute('margin','mgn')
+provision-attribute('padding','pad')
+provision-widths()
+provision-heights()
+misc()
