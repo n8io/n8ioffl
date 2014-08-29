@@ -8,20 +8,28 @@
         vm.settings = data;
         vm.settings.leagueName = _(data.settings.basic).findWhere({key:'LeagueName'}).value;
       });
-      $rootScope.$on('mainLogoLoaded', function(event, data){
-        vm.logoUrl = data;
-      });
       $rootScope.$on('membersLoaded', function(event, data){
         vm.members = data;
       });
+      $rootScope.$on('teamLoaded', function(event, data){
+        vm.team = data;
+      });
 
       vm.onMemberSelected = function(member){
+        vm.team = member.team;
         $location.path('/' + [$routeParams.league, $routeParams.season, member.team.id, 'roster'].join('/'));
       };
     }])
     .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, EspnFflService, RosterService) {
       var vm = this;
       vm.errors = [];
+      vm.isWorking = true;
+
+      $scope.$watch('errors', function(){
+        if(vm.errors && vm.errors.length){
+          vm.isWorking = false;
+        }
+      });
 
       async.parallel({
         getOwnerRoster: function(callback){
@@ -70,12 +78,13 @@
         vm.data = results.getOwnerRoster;
         vm.settings = results.getLeagueSettings;
         vm.members = results.getLeagueMembers.members;
-        $rootScope.$broadcast('mainLogoLoaded', results.getOwnerRoster.team.logoUrl);
+        $rootScope.$broadcast('teamLoaded', results.getOwnerRoster.team);
         $rootScope.$broadcast('settingsLoaded', results.getLeagueSettings);
         if(!$scope.masterCtrl.members){
           $rootScope.$broadcast('membersLoaded', results.getLeagueMembers.members);
         }
         vm.populateEmptyRosterSlots(vm.data.roster.starters, vm.settings);
+        vm.isWorking = false;
       });
 
       vm.populateEmptyRosterSlots = function(actualStarters, leagueSettings){

@@ -35,19 +35,22 @@
   | </script>
   .dropdown
     a(href='javascript:;',title='{{rosterCtrl.data.owner.firstName}} {{rosterCtrl.data.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.title
-      span {{rosterCtrl.data.team.name}}
+      span {{masterCtrl.team.name}}
       span.caret.mgn-left-5
-    h2.float-right.text-muted.mgn-top-0 {{rosterCtrl.data.team.abbr}}
-    ul.dropdown-menu
-      li(data-ng-repeat='member in masterCtrl.members')
+    h2.float-right.text-muted.mgn-top-0 {{masterCtrl.team.abbr}}
+    ul.dropdown-menu.mgn-top-0
+      li(data-ng-repeat='member in masterCtrl.members', data-ng-class='{true:"active",false:""}[masterCtrl.team.id == member.team.id]')
         a(href='javascript:;',data-ng-click='masterCtrl.onMemberSelected(member)').text-no-wrap
-          span.float-left {{member.team.name}}
-          .float-left.text-muted.pad-left-5 [{{member.team.abbr}}]
+          span.float-left
+            span {{member.team.name}}
+          .float-left.italics.pad-left-5 [{{member.team.abbr}}]
           .clearfix
     .clearfix
   .panel.panel-default
     .panel-heading
       .float-left Starters
+      .float-right
+        i(data-ng-class='{true:"opacity-100",false:"opacity-0"}[rosterCtrl.isWorking]').fa.fa-circle-o-notch.spin-infinite.transition-all-500-ease
       .clearfix
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
@@ -64,6 +67,8 @@
   .panel.panel-default
     .panel-heading
       .float-left Bench
+      .float-right
+        i(data-ng-class='{true:"opacity-100",false:"opacity-0"}[rosterCtrl.isWorking]').fa.fa-circle-o-notch.spin-infinite.transition-all-500-ease
       .clearfix
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
