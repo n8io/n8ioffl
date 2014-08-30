@@ -1,56 +1,64 @@
 .div(data-ng-controller='Roster_Controller as rosterCtrl')
   | <script type='text/ng-template' id='playerHeader.html'>
   th.width-30 POS
+  th.width-15.hidden-ss
   th Player
-  th.width-30.text-center OPP
-  th.width-75.text-center STATUS
+  th.width-40.text-center OPP
+  th.width-80.text-center STATUS
   | </script>
   | <script type='text/ng-template' id='vacantBench.html'>
-  td(colspan='4').text-center
+  td(colspan='5').text-center
     span.text-muted There are 0 players on the bench
   | </script>
   | <script type='text/ng-template' id='playerRow.html'>
-  td(data-ng-if='!player.id').width-30 {{player.fantasyPosition}}
+  td(data-ng-if='!player.id').width-30 {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
   td(data-ng-if='!player.id',colspan="3").text-center.text-muted
     | -- empty --
-  td(data-ng-if='player.id') {{player.fantasyPosition}}
+  td(data-ng-if='player.id') {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
+  td.text-center.hidden-ss
+    span(data-ng-if='player.injury', title='{{player.injury.status}}')
+      span(data-ng-class='player.injury.key').injury-status
+        i.fa.fa-fw.fa-square
+    span(data-ng-if='!player.injury', title='No Report')
+      span.injury-status
+        i.fa.fa-fw.fa-square
   td(data-ng-if='player.id')
-    .float-left.text-center.width-30.hidden-xs
-      img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
-      div(data-ng-if='!!!player.team')
-    a(href='javascript:;',data-player-id='{{player.id}}').float-left.mgn-left-5
-      | {{player.name}}
-    span.text-muted.pad-left-5.italic.float-left.hidden-xs {{player.position}} {{player.team}}
-    .float-right(data-ng-if='player.id && player.matchup && !player.matchup.isBye').text-muted
-      span(data-ng-if='!player.matchup.isHome') @
-      span(data-ng-if='player.matchup.isHome') vs
-    .clearfix
-  td(colspan="2",data-ng-if='player.id && !player.matchup')
-  td(data-ng-if='player.id && player.matchup').text-center
-    span(data-ng-if='player.matchup.isBye') -BYE-
-    span(data-ng-if='!player.matchup.isBye')
-      a(href='javascript:;')
-        img(data-ng-src='/img/logos/{{player.matchup.opponent.toLowerCase()}}.svg', title='{{player.matchup.opponent}}').nfl-team-logo
-  td(data-ng-if='player.id && player.matchup').text-center
-    span(data-ng-if='player.matchup').font-size-small
-      span(data-ng-if='player.matchup.isBye') --
-      span(data-ng-if='!player.matchup.isBye') {{player.matchup.status}}
+    .fade-overflow-small
+      .float-left.text-center.width-30.hidden-ss
+        img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
+        div(data-ng-if='!!!player.team')
+      a(href='javascript:;',data-player-id='{{player.id}}').float-left.mgn-left-5
+        | {{player.name}}
+      span.text-muted.pad-left-5.italic.float-left.hidden-ss
+        span.player-position &nbsp;{{player.position}}
+        span.player-team &nbsp;{{player.team}}
+      .clearfix
+  td(colspan="2",data-ng-if='player.id && !player.matchup && player.team != "FA"')
+  td(colspan="2",data-ng-if='player.id && ((player.matchup && player.matchup.isBye) || player.team == "FA")').text-center
+    span.bye-week-indicator -- BYE --
+  td(data-ng-if='player.id && player.matchup && !player.matchup.isBye && player.team != "FA"').text-center
+    span(data-ng-if='!player.matchup.isHome') @
+    span(data-ng-if='player.matchup.isHome') vs
+    a(href='javascript:;')
+      img(data-ng-src='/img/logos/{{player.matchup.opponent.toLowerCase()}}.svg', title='{{player.matchup.opponent}}').nfl-team-logo
+  td(data-ng-if='player.id && player.matchup && !player.matchup.isBye && player.team != "FA"').text-center
+    span {{player.matchup.status}}
   | </script>
   .dropdown
-    a(href='javascript:;',title='{{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.title.mgn-bottom-0
+    a(href='javascript:;',title='{{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.page-title.mgn-bottom-0
       span {{masterCtrl.member.team.name}}
       span.caret.mgn-left-5
-    h2.float-right.text-muted.mgn-top-0.mgn-bottom-0 {{masterCtrl.member.team.abbr}}
+    h2.float-right.text-muted.mgn-top-0.mgn-bottom-0.page-title {{masterCtrl.member.team.abbr}}
     ul.dropdown-menu.mgn-top-0
-      li(data-ng-repeat='member in masterCtrl.members', data-ng-class='{true:"active",false:""}[masterCtrl.team.id == member.team.id]')
+      li(data-ng-repeat='member in masterCtrl.members | orderByMemberTeamName', data-ng-class='{true:"active",false:""}[masterCtrl.member.team.id == member.team.id]')
         a(href='javascript:;',data-ng-click='masterCtrl.onMemberSelected(member)').text-no-wrap
           span.float-left
             span {{member.team.name}}
           .float-left.italics.pad-left-5 [{{member.team.abbr}}]
           .clearfix
     .clearfix
-  .line-height-20.mgn-bottom-3
-    span.color-fff.mgn-left-10 {{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}
+  .line-height-20.pad-bottom-5
+    span.color-777.text-shadow-eee.mgn-left-10 {{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}
   .panel.panel-default
     .panel-heading
       .float-left Starters
@@ -60,15 +68,15 @@
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
         tr(ng-include="'playerHeader.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isQB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isRB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isFlex', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isWR', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isLB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDL', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isK', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDST', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isQB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isRB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isFlex', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isWR', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isLB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDL', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isK', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.starters | isDST', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, true)')
   .panel.panel-default
     .panel-heading
       .float-left Bench
@@ -78,13 +86,14 @@
     .panel-body
       table.table.col-md-12.table-bordered.table-condensed.table-striped.table-hover.table-player.mgn-bottom-0
         tr(ng-include="'playerHeader.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isQB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isRB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isWR', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isLB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDL', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDB', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isK', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isP', ng-include="'playerRow.html'")
-        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDST', ng-include="'playerRow.html'")
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isQB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isRB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isWR', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isLB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDL', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDB', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isK', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isP', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isDST', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
+        tr(data-ng-repeat='player in rosterCtrl.roster.bench | isIR', ng-include="'playerRow.html'", data-ng-class='rosterCtrl.getAdditionalPlayerClasses(player, false)')
         tr(data-ng-if='rosterCtrl.team.roster.bench.length === 0', ng-include="'vacantBench.html'")

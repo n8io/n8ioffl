@@ -117,5 +117,23 @@
           }
         });
       };
+
+      vm.getAdditionalPlayerClasses = function(player, isStarter){
+        var classes = [];
+
+        if(player.team === 'FA'){
+          classes.push('free-agent');
+          classes.push('on-bye-week');
+        }
+        if(!!isStarter && !player.matchup && $routeParams.season === (new Date()).getFullYear()){
+          classes.push('on-bye-week');
+        }
+
+        if(classes.length){
+          classes.push('alert-bad-player');
+        }
+
+        return classes.join(' ');
+      };
     }]);
 })();

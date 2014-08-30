@@ -2,6 +2,13 @@
   'use strict';
   angular
     .module('ngApp')
+    .filter('orderByMemberTeamName', [function() {
+      return function(members){
+        return _(members).sortBy(function(m){
+          return m.team && m.team.name ? m.team.name : 'ZZZZZZZZZZZZZZZZZ' + m.team.id;
+        });
+      };
+    }])
     .filter('isQB', [function() {
       return function(players){
         return _(players).filter(function(player){
@@ -69,6 +76,13 @@
       return function(players){
         return _(players).filter(function(player){
           return player && player.fantasyPosition && player.fantasyPosition.toUpperCase() === 'P'.toUpperCase();
+        });
+      };
+    }])
+    .filter('isIR', [function() {
+      return function(players){
+        return _(players).filter(function(player){
+          return player && player.fantasyPosition && player.fantasyPosition.toUpperCase() === 'IR'.toUpperCase();
         });
       };
     }])

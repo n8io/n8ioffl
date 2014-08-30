@@ -16,12 +16,13 @@ a
 
 .lobster
   font-family 'Lobster', cursive
-.lobster.title
+.lobster
   text-shadow 1px 1px #eee
   &:hover,&:focus,&:active
     text-decoration none
+.page-title
   @media(max-width:500px)
-    font-size 80%
+    font-size 1.8em
 
 .ip-header
   background-color $splash-bg-color
@@ -53,7 +54,7 @@ table.table-player
 
 .nfl-team-logo
   max-height 25px
-  max-width 25px
+  width 25px
   @media(max-width:500px)
     max-height 22px
     max-width 22px
@@ -64,5 +65,35 @@ img.main-logo
   background rgba(#fff, .3)
   border 2px solid #888
 
+.text-shadow-eee
+  text-shadow 1px 1px #eee
+.color-777
+  color #777
+
 .width-initial
   width initial!important
+
+$roster-issue-red = #A94442
+tr.on-bye-week
+  * span.bye-week-indicator
+    color $roster-issue-red
+tr.free-agent
+  * span.player-team
+    color $roster-issue-red
+.injury-status
+  color #6DBB75
+  &.P
+    color #F0C900
+  &.Q
+    color #FF8500
+  &.O
+  &.SSPD
+  &.IR
+    color red
+tr.alert-bad-player
+  * .injury-status
+    color red!important
+
+@media(max-width:480px)
+  .hidden-ss
+    display none
