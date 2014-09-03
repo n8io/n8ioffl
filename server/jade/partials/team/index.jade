@@ -12,10 +12,10 @@
   | </script>
   | <script type='text/ng-template' id='playerRow.html'>
   td(data-ng-if='!player.id').width-30 {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
-  td(data-ng-if='!player.id',colspan="3").text-center.text-muted
+  td(data-ng-if='!player.id',colspan="4").text-center.text-muted
     | -- empty --
   td(data-ng-if='player.id') {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
-  td.text-center.hidden-ss
+  td.text-center.hidden-ss(data-ng-if='player.id')
     span(data-ng-if='player.injury', title='{{player.injury.status}}')
       span(data-ng-class='player.injury.key').injury-status
         i.fa.fa-fw.fa-square
@@ -44,21 +44,26 @@
   td(data-ng-if='player.id && player.matchup && !player.matchup.isBye && player.team != "FA"').text-center
     span {{player.matchup.status}}
   | </script>
-  .dropdown
-    a(href='javascript:;',title='{{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.page-title.mgn-bottom-0
-      span {{masterCtrl.member.team.name}}
-      span.caret.mgn-left-5
+  .mgn-bottom-10
+    .float-left
+      img(data-ng-src='{{masterCtrl.member.team.logoUrl}}').media-object.img-rounded.img-responsive.height-75.width-75.bg-color-fff
+    .float-left.pad-left-10
+      .dropdown
+        a(href='javascript:;',title='{{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}', data-toggle='dropdown').h2.mgn-top-0.dropdown-toggle.float-left.lobster.page-title.mgn-bottom-0
+          span {{masterCtrl.member.team.name}}
+          span.caret.mgn-left-5
+        ul.dropdown-menu.mgn-top-0
+          li(data-ng-repeat='member in masterCtrl.members | orderByMemberTeamName', data-ng-class='{true:"active",false:""}[masterCtrl.member.team.id == member.team.id]')
+            a(href='javascript:;',data-ng-click='masterCtrl.onMemberSelected(member)').text-no-wrap
+              span.float-left
+                span {{member.team.name}}
+              .float-left.italics.pad-left-5 [{{member.team.abbr}}]
+              .clearfix
+        .clearfix
+      .line-height-20.pad-bottom-5
+        span.color-777.text-shadow-eee.mgn-left-10 {{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}
     h2.float-right.text-muted.mgn-top-0.mgn-bottom-0.page-title {{masterCtrl.member.team.abbr}}
-    ul.dropdown-menu.mgn-top-0
-      li(data-ng-repeat='member in masterCtrl.members | orderByMemberTeamName', data-ng-class='{true:"active",false:""}[masterCtrl.member.team.id == member.team.id]')
-        a(href='javascript:;',data-ng-click='masterCtrl.onMemberSelected(member)').text-no-wrap
-          span.float-left
-            span {{member.team.name}}
-          .float-left.italics.pad-left-5 [{{member.team.abbr}}]
-          .clearfix
     .clearfix
-  .line-height-20.pad-bottom-5
-    span.color-777.text-shadow-eee.mgn-left-10 {{masterCtrl.member.owner.firstName}} {{masterCtrl.member.owner.lastName}}
   .panel.panel-default
     .panel-heading
       .float-left Starters
