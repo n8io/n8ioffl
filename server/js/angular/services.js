@@ -21,10 +21,21 @@
         }
       });
     }])
+    .factory('EspnFflLeagueService', ['$resource', function($resource) {
+      return $resource('/api/espnffl/:league', {}, {
+        Get: {
+          method:'GET',
+          timeout: defaultTimeout,
+          isArray: false
+        }
+      });
+    }])
     .factory('UiService', [function($resource) {
       return {
+        leagues: [],
         current: {
           leagueId: -1,
+          league: null,
           seasonId: -1,
           teamId: -1,
           roster: null,

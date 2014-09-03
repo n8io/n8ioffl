@@ -14,10 +14,18 @@
       $rootScope.$on('memberLoaded', function(event, data){
         vm.member = UiService.current.member;
       });
+      $rootScope.$on('leaguesLoaded', function(event, data){
+        vm.leagues = UiService.leagues;
+      });
 
       vm.onMemberSelected = function(member){
         vm.member = member;
         $location.path('/' + [$routeParams.league, $routeParams.season, member.team.id, 'roster'].join('/'));
+      };
+
+      vm.onLeagueSelected = function(league){
+        vm.member = member;
+        $location.path('/' + [league.id, 2014, 1, 'roster'].join('/'));
       };
     }])
     .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'UiService', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, UiService, EspnFflService, RosterService) {
@@ -135,5 +143,51 @@
 
         return classes.join(' ');
       };
+    }])
+    .controller('Home_Controller', ['$rootScope', '$location', 'UiService', 'EspnFflLeagueService', function($rootScope, $location, UiService, EspnFflLeagueService) {
+      var vm = this;
+      vm.isWorking = true;
+
+      async.parallel({
+        getLeague1: function(callback){
+          if(UiService.leagues.length){
+            return callback(null, 1);
+          }
+          RosterService.Get({
+            league:220779
+          }, function(data){
+            return callback(null, data);
+          }, function(err){
+            return callback({reason: 'Could not retrieve league information at this time. Please try back later.'});
+          });
+        },
+        getLeague2: function(callback){
+          if(UiService.leagues.length){
+            return callback(null, 1);
+          }
+          RosterService.Get({
+            league:27578
+          }, function(data){
+            return callback(null, data);
+          }, function(err){
+            return callback({reason: 'Could not retrieve league information at this time. Please try back later.'});
+          });
+        }
+      }, function(err, results){
+        if(err){
+          vm.errors.push(err);
+          return;
+        }
+
+        if(results.getLeague1 !== 1 && results.getLeague2 !== 1){
+          UiService.leagues = [results.getLeague1.league, results.getLeague2.league];
+        }
+
+        vm.leagues = UiService.leagues;
+
+        $rootScope.$broadcast('leaguesLoaded', UiService.leagues);
+
+        vm.isWorking = false;
+      });
     }]);
 })();
