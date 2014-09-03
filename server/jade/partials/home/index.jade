@@ -7,5 +7,5 @@
     .panel-body
       ul.list-unstyled
         li(data-ng-repeat='season in league.seasons | orderBy:"toString()":true')
-          a(href='/{{league.id}}/{{season}}/1')
+          a(data-ng-href='/{{league.id}}/{{season}}/1/roster')
             span {{season}}

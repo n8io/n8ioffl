@@ -6,7 +6,11 @@
       var vm = this;
       $rootScope.$on('settingsLoaded', function(event, data){
         vm.settings = UiService.current.settings;
-        vm.settings.leagueName = _(UiService.current.settings.basic).findWhere({key:'LeagueName'}).value;
+        if(vm.settings){
+          vm.settings.leagueName = _(vm.settings.basic).findWhere({key:'LeagueName'}).value;
+        }
+
+        vm.season = $routeParams.season;
       });
       $rootScope.$on('membersLoaded', function(event, data){
         vm.members = UiService.current.members;
@@ -16,6 +20,9 @@
       });
       $rootScope.$on('leaguesLoaded', function(event, data){
         vm.leagues = UiService.leagues;
+      });
+      $rootScope.$on('leagueLoaded', function(event, data){
+        vm.league = UiService.current.league;
       });
 
       vm.onMemberSelected = function(member){
@@ -27,8 +34,12 @@
         team = team || 1;
         $location.path('/' + [league.id, year, team, 'roster'].join('/'));
       };
+
+      vm.onSeasonSelected = function(season){
+        $location.path('/' + [$routeParams.league, season, $routeParams.team, 'roster'].join('/'));
+      };
     }])
-    .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'UiService', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, UiService, EspnFflService, RosterService) {
+    .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'UiService', 'EspnFflLeagueService', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, UiService, EspnFflLeagueService, EspnFflService, RosterService) {
       var vm = this;
       vm.errors = [];
       vm.isWorking = true;
@@ -39,7 +50,34 @@
         }
       });
 
+      var isSameLeague = UiService.current.leagueId === $routeParams.league;
+
+      if(!isSameLeague){
+        UiService.current.members = null;
+        UiService.current.member = null;
+        UiService.current.league = null;
+        UiService.current.leagueId = null;
+        UiService.current.settings = null;
+
+        $rootScope.$broadcast('memberLoaded', UiService.current.member);
+        $rootScope.$broadcast('settingsLoaded', UiService.current.settings);
+        $rootScope.$broadcast('membersLoaded', UiService.current.members);
+      }
+
       async.parallel({
+        getLeague: function(callback){
+          if(UiService.current.league && isSameLeague){
+            return callback(null, UiService.current);
+          }
+
+          EspnFflLeagueService.Get({
+            league:$routeParams.league
+          }, function(data){
+            return callback(null, data);
+          }, function(err){
+            return callback({reason: 'Could not retrieve league information at this time. Please try back later.'});
+          });
+        },
         getRoster: function(callback){
           RosterService.Get({
             league:$routeParams.league,
@@ -52,7 +90,7 @@
           });
         },
         getSettings: function(callback){
-          if(UiService.current.settings){
+          if(UiService.current.settings && isSameLeague){
             return callback(null, UiService.current);
           }
 
@@ -67,7 +105,7 @@
           });
         },
         getMembers: function(callback){
-          if(UiService.current.members){
+          if(UiService.current.members && isSameLeague){
             return callback(null, UiService.current);
           }
 
@@ -89,15 +127,20 @@
 
         vm.team = UiService.current.team = results.getRoster.team;
         vm.roster = UiService.current.roster = results.getRoster.roster;
+        vm.league = UiService.current.league = results.getLeague.league;
+        vm.leagueId = UiService.current.leagueId = results.getSettings.league.id;
         vm.settings = UiService.current.settings = results.getSettings.settings;
         vm.members = UiService.current.members = results.getMembers.members;
         vm.member = UiService.current.member = _(results.getRoster).pick('team', 'owner');
+        vm.season = UiService.current.season = $routeParams.season;
 
         $rootScope.$broadcast('memberLoaded', UiService.current.member);
         $rootScope.$broadcast('settingsLoaded', UiService.current.settings);
         $rootScope.$broadcast('membersLoaded', UiService.current.members);
+        $rootScope.$broadcast('leagueLoaded', UiService.current.league);
 
         vm.populateEmptyRosterSlots(vm.roster.starters, vm.settings);
+        console.log('Current:', UiService.current);
         vm.isWorking = false;
       });
 
@@ -111,9 +154,11 @@
           return str.fantasyPosition;
         });
 
+
+
         var vacancies = _(starterSlots).map(function(ss){
           var slim = _(ss).pick(['key','name','maximumStarters']);
-          slim.openings = ss.maximumStarters - (starterSlotsFilled[ss.key]||0);
+          slim.openings = ss.maximumStarters === 99 ? 0 : ss.maximumStarters - (starterSlotsFilled[ss.key]||0);
           return slim;
         });
 

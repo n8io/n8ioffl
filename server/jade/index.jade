@@ -2,7 +2,17 @@ extends ./_layouts/master
 
 append body-header
   .title
-    span.float-left {{masterCtrl.settings.leagueName}}
+    a(href='/').header-link.float-left {{masterCtrl.settings.leagueName}}
+    span.float-right
+      .dropdown
+        a(href='javascript:;', data-toggle='dropdown').dropdown-toggle.header-link
+          span {{masterCtrl.season}}
+          span.caret.mgn-left-5
+        ul.dropdown-menu.mgn-top-0.pull-right
+          li(data-ng-repeat='season in masterCtrl.league.seasons | orderBy:"toString()":true', data-ng-class='{true:"active",false:""}[masterCtrl.season == season]')
+            a(href='javascript:;',data-ng-click='masterCtrl.onSeasonSelected(season)').text-no-wrap
+              span {{season}}
+        .clearfix
     .clearfix
 append body-content
   div(data-ng-view)
