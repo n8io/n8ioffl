@@ -23,9 +23,9 @@
         $location.path('/' + [$routeParams.league, $routeParams.season, member.team.id, 'roster'].join('/'));
       };
 
-      vm.onLeagueSelected = function(league){
-        vm.member = member;
-        $location.path('/' + [league.id, 2014, 1, 'roster'].join('/'));
+      vm.onLeagueSelected = function(league, year, team){
+        team = team || 1;
+        $location.path('/' + [league.id, year, team, 'roster'].join('/'));
       };
     }])
     .controller('Roster_Controller', ['$location', '$routeParams', '$rootScope', '$scope', 'UiService', 'EspnFflService', 'RosterService', function($location, $routeParams, $rootScope, $scope, UiService, EspnFflService, RosterService) {
@@ -153,7 +153,7 @@
           if(UiService.leagues.length){
             return callback(null, 1);
           }
-          RosterService.Get({
+          EspnFflLeagueService.Get({
             league:220779
           }, function(data){
             return callback(null, data);
@@ -165,7 +165,7 @@
           if(UiService.leagues.length){
             return callback(null, 1);
           }
-          RosterService.Get({
+          EspnFflLeagueService.Get({
             league:27578
           }, function(data){
             return callback(null, data);

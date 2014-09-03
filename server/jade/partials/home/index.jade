@@ -1,1 +1,11 @@
-.row(data-ng-controller='homeCtrl as Home_Controller')
+.row(data-ng-controller='Home_Controller as homeCtrl')
+  h2.mgn-top-0.float-left.lobster.page-title
+    span Select a league
+  .clearfix
+  .panel.panel-default(data-ng-repeat='league in homeCtrl.leagues | orderBy:"league.name"')
+    .panel-heading {{ league.name }}
+    .panel-body
+      ul.list-unstyled
+        li(data-ng-repeat='season in league.seasons | orderBy:"toString()":true')
+          a(href='/{{league.id}}/{{season}}/1')
+            span {{season}}
