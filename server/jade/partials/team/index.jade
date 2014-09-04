@@ -46,10 +46,10 @@
         .media-body
           .media-heading
             h4 {{player.name}} | {{player.position}} | {{player.team}}
-            h5(data-ng-if='player.height') Height: {{player.height}}
-            h5(data-ng-if='player.weight') Weight: {{player.weight}}lbs
-            h5(data-ng-if='player.college') College: {{player.college}}
-            h5(data-ng-if='player.age') Age: {{player.age}}
+            h5(data-ng-if='player.height').font-size-smaller Height: {{player.height}}
+            h5(data-ng-if='player.weight').font-size-smaller Weight: {{player.weight}}lbs
+            h5(data-ng-if='player.college').font-size-smaller College: {{player.college}}
+            h5(data-ng-if='player.age').font-size-smaller Age: {{player.age}}
       .col-xs-12(data-ng-repeat='item in player.news')
         .text-center(data-ng-if='player.showAll && $first')
           a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show less

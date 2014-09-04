@@ -56,7 +56,7 @@ module.exports = function(app, options){
 
             if(!found) return;
 
-            s = _.extend(found, s);
+            s = _.extend(s, _(found).omit('fantasyPosition'));
           });
 
           data.roster.bench = _(data.roster.bench).each(function(b){
@@ -64,7 +64,7 @@ module.exports = function(app, options){
 
             if(!found) return;
 
-            b = _.extend(b, found);
+            b = _.extend(b, _(found).omit('fantasyPosition'));
           });
 
           return callback(null, data);
