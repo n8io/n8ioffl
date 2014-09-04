@@ -20,6 +20,10 @@
     "espnffl": {
       "uri": "http://espnffl.herokuapp.com",
       "apiKey": ""
+    },
+    "espnnfl": {
+      "uri": "http://espnnfl.herokuapp.com",
+      "apiKey": ""
     }
   },
   "tracking": {
@@ -62,6 +66,8 @@
     "services:defaultTimeout",
     "session:keys",
     "services:espnffl:uri",
-    "services:espnffl:apiKey"
+    "services:espnffl:apiKey",
+    "services:espnnfl:uri",
+    "services:espnnfl:apiKey"
   ]
 }

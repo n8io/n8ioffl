@@ -48,17 +48,15 @@
             h5(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
             h5 {{player.college}}
       .media.visible-xs
-        .pull-left
-          img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=75&h=54').img-thumbnail.img-responsive.media-object
-        .media-body
-          .media-heading
-            h5 {{player.name}} | {{player.position}} | {{player.team}}
-            h6(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
+        .text-center
+          img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=150&h=108').img-thumbnail.img-responsive
+          h5.bold.font-size-smaller {{player.name}} | {{player.position}} | {{player.team}}
+          h6(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
       .col-xs-12(data-ng-repeat='item in player.news')
-        div(data-ng-if='player.showAll && $first').text-center
+        .text-center(data-ng-if='player.showAll && $first')
           a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show less
-        div(data-ng-class='{true:"",false:"hide"}[!!$first || !!player.showAll]').pad-top-5
-          .mgn-top-10.italic.text-muted {{rosterCtrl.getTimeAgo(item.date)}}
+        .pad-top-5(data-ng-class='{true:"",false:"hide"}[!!$first || !!player.showAll]')
+          .italic.text-muted {{rosterCtrl.getTimeAgo(item.date)}}
           .media.mgn-top-5
             .pull-left
               i.media-object.bold News

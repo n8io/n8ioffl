@@ -161,7 +161,6 @@
               season:$routeParams.season,
               noun: player.id
             }, function(data){
-              console.log(data);
               player.news = data.newsItems;
             }, function(err){
               vm.errors.push({reason: 'Could not retrieve league member information at this time. Please try back later.'});
