@@ -140,35 +140,38 @@
         $rootScope.$broadcast('leagueLoaded', UiService.current.league);
 
         vm.populateEmptyRosterSlots(vm.roster.starters, vm.settings);
-        console.log('Current:', UiService.current);
+        // console.log('Current:', UiService.current);
         setTimeout(function(){
-          $('.player-details-collapse').on('show.bs.collapse', function(){
-            var pid = parseInt($(this).data('playerId'), 0);
-            var player = _(vm.roster.starters).find(function(p){
-              return p.id === pid;
-            });
-
-            if(!player){
-              player = _(vm.roster.bench).find(function(p){
-                return p.id === pid;
-              });
-            }
-
-            if(!player) return;
-
-            EspnFflService.Get({
-              league:$routeParams.league,
-              season:$routeParams.season,
-              noun: player.id
-            }, function(data){
-              player.news = data.newsItems;
-            }, function(err){
-              vm.errors.push({reason: 'Could not retrieve league member information at this time. Please try back later.'});
-            });
-          });
+          $('.player-details-collapse').on('show.bs.collapse', vm.onNeedToLoadPlayerNews);
+          $('.player-details-modal').on('show.bs.modal', vm.onNeedToLoadPlayerNews);
         }, 500);
         vm.isWorking = false;
       });
+
+      vm.onNeedToLoadPlayerNews = function(){
+        var pid = parseInt($(this).data('playerId'), 0);
+        var player = _(vm.roster.starters).find(function(p){
+          return p.id === pid;
+        });
+
+        if(!player){
+          player = _(vm.roster.bench).find(function(p){
+            return p.id === pid;
+          });
+        }
+
+        if(!player) return;
+
+        EspnFflService.Get({
+          league:$routeParams.league,
+          season:$routeParams.season,
+          noun: player.id
+        }, function(data){
+          player.news = data.newsItems;
+        }, function(err){
+          vm.errors.push({reason: 'Could not retrieve league member information at this time. Please try back later.'});
+        });
+      };
 
       vm.populateEmptyRosterSlots = function(actualStarters, settings){
         var starterSlots = _(settings.roster).filter(function(rs){

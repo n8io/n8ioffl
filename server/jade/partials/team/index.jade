@@ -27,7 +27,9 @@
       .float-left.text-center
         img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
         div(data-ng-if='!!!player.team')
-      a(href='javascript:;',data-player-id='{{player.id}}', data-toggle='collapse', data-target='#player-details-{{player.id}}').float-left.mgn-left-5
+      a(href='javascript:;',data-player-id='{{player.id}}', data-toggle='collapse', data-target='#player-details-{{player.id}}').float-left.mgn-left-5.hidden-xs
+        | {{player.name}}
+      a(data-player-id='{{player.id}}', data-toggle='modal', data-target='#player-{{player.id}}-modal').float-left.mgn-left-5.visible-xs
         | {{player.name}}
       span.text-muted.pad-left-5.italic.float-left.hidden-xs
         span.player-position &nbsp;{{player.position}}
@@ -37,21 +39,17 @@
         span(data-ng-if='player.hasVideoNews').pad-left-5
           i.fa.fa-youtube-play
       .clearfix
-    .collapse.out(id='player-details-{{player.id}}',data-player-id='{{player.id}}').player-details-collapse
-      .media.hidden-xs
+    .collapse.out(id='player-details-{{player.id}}',data-player-id='{{player.id}}').player-details-collapse.hidden-xs
+      .media
         .pull-left
           img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=150&h=108').img-thumbnail.img-responsive.media-object.media-body
         .media-body
           .media-heading
             h4 {{player.name}} | {{player.position}} | {{player.team}}
-            h5(data-ng-if='player.number') {{'#' + player.number}}
-            h5(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
-            h5 {{player.college}}
-      .media.visible-xs
-        .text-center
-          img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=150&h=108').img-thumbnail.img-responsive
-          h5.bold.font-size-smaller {{player.name}} | {{player.position}} | {{player.team}}
-          h6(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
+            h5(data-ng-if='player.height') Height: {{player.height}}
+            h5(data-ng-if='player.weight') Weight: {{player.weight}}lbs
+            h5(data-ng-if='player.college') College: {{player.college}}
+            h5(data-ng-if='player.age') Age: {{player.age}}
       .col-xs-12(data-ng-repeat='item in player.news')
         .text-center(data-ng-if='player.showAll && $first')
           a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show less
@@ -68,6 +66,40 @@
         hr.mgn-top-5.mgn-bottom-5(data-ng-if='!$last && player.showAll')
         div(data-ng-if='!player.showAll && $last && !$first').text-center
           a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show more
+    .player-details-modal(id='player-{{player.id}}-modal', data-player-id='{{player.id}}', data-keyboard='true').modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-body
+            .media
+              .pull-left
+                img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=150&h=108').img-thumbnail.img-responsive
+              .media-header
+                button.close(data-dismiss='modal')
+                  span &times;
+                h4.bold {{player.name}}
+                  img(src='/img/logos/{{player.team.toLowerCase()}}.svg').height-20.width-25
+                h5.font-size-smaller {{player.position}}
+                h5.font-size-smaller(data-ng-if='player.age') Age: {{player.age}}
+                h5.font-size-smaller(data-ng-if='player.height')
+                  span Height: {{player.height}}
+                  span(data-ng-if='player.weight') &nbsp;Weight: {{player.weight}}lbs
+                h5.font-size-smaller(data-ng-if='player.college') College: {{player.college}}
+              .col-xs-12(data-ng-repeat='item in player.news')
+                .text-center(data-ng-if='player.showAll && $first')
+                  a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show less
+                .pad-top-5(data-ng-class='{true:"",false:"hide"}[!!$first || !!player.showAll]')
+                  .italic.text-muted {{rosterCtrl.getTimeAgo(item.date)}}
+                  .media.mgn-top-0
+                    .pull-left
+                      i.media-object.bold News
+                    .media-body {{item.headline}}
+                  .media.mgn-top-5
+                    .pull-left
+                      i.media-object.bold Spin
+                    .media-body {{item.text}}
+                hr.mgn-top-5.mgn-bottom-5(data-ng-if='!$last && player.showAll')
+                .text-center(data-ng-if='!player.showAll && $last && !$first')
+                  a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show more
   td(colspan="2",data-ng-if='player.id && !player.matchup && player.team != "FA"')
   td(colspan="2",data-ng-if='player.id && ((player.matchup && player.matchup.isBye) || player.team == "FA")').text-center
     span.bye-week-indicator -- BYE --

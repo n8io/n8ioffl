@@ -72,8 +72,6 @@ module.exports = function(app, options){
       }
     ],
     function(err, results){
-      console.log(JSON.stringify(results,null,2));
-
       if(err){
         return res.status(500).json({message: 'Could not retrieve roster at this time. See logs for details.'});
       }
