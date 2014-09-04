@@ -56,7 +56,7 @@ module.exports = function(app, options){
 
             if(!found) return;
 
-            s = _.extend(s, found);
+            s = _.extend(found, s);
           });
 
           data.roster.bench = _(data.roster.bench).each(function(b){
