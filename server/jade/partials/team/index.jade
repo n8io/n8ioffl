@@ -1,7 +1,7 @@
 .div(data-ng-controller='Roster_Controller as rosterCtrl')
   | <script type='text/ng-template' id='playerHeader.html'>
   th.width-30 POS
-  th.width-15.hidden-ss
+  th.width-15.hidden-xs
   th Player
   th.width-40.text-center OPP
   th.width-80.text-center STATUS
@@ -15,7 +15,7 @@
   td(data-ng-if='!player.id',colspan="4").text-center.text-muted
     | -- empty --
   td(data-ng-if='player.id') {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
-  td.text-center.hidden-ss(data-ng-if='player.id')
+  td.text-center.hidden-xs(data-ng-if='player.id')
     span(data-ng-if='player.injury', title='{{player.injury.status}}')
       span(data-ng-class='player.injury.key').injury-status
         i.fa.fa-fw.fa-square
@@ -24,15 +24,52 @@
         i.fa.fa-fw.fa-square
   td(data-ng-if='player.id')
     .fade-overflow-small
-      .float-left.text-center.width-30.hidden-ss
+      .float-left.text-center
         img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
         div(data-ng-if='!!!player.team')
-      a(href='javascript:;',data-player-id='{{player.id}}').float-left.mgn-left-5
+      a(href='javascript:;',data-player-id='{{player.id}}', data-toggle='collapse', data-target='#player-details-{{player.id}}').float-left.mgn-left-5
         | {{player.name}}
-      span.text-muted.pad-left-5.italic.float-left.hidden-ss
+      span.text-muted.pad-left-5.italic.float-left.hidden-xs
         span.player-position &nbsp;{{player.position}}
         span.player-team &nbsp;{{player.team}}
+        span(data-ng-if='player.hasNews').pad-left-5
+          i.fa.fa-comments-o
+        span(data-ng-if='player.hasVideoNews').pad-left-5
+          i.fa.fa-youtube-play
       .clearfix
+    .collapse.out(id='player-details-{{player.id}}',data-player-id='{{player.id}}').player-details-collapse
+      .media.hidden-xs
+        .pull-left
+          img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=150&h=108').img-thumbnail.img-responsive.media-object.media-body
+        .media-body
+          .media-heading
+            h4 {{player.name}} | {{player.position}} | {{player.team}}
+            h5(data-ng-if='player.number') {{'#' + player.number}}
+            h5(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
+            h5 {{player.college}}
+      .media.visible-xs
+        .pull-left
+          img(data-ng-src='http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/{{player.id}}.png&w=75&h=54').img-thumbnail.img-responsive.media-object
+        .media-body
+          .media-heading
+            h5 {{player.name}} | {{player.position}} | {{player.team}}
+            h6(data-ng-if='player.height') {{player.height}} {{player.weight}}lbs
+      .col-xs-12(data-ng-repeat='item in player.news')
+        div(data-ng-if='player.showAll && $first').text-center
+          a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show less
+        div(data-ng-class='{true:"",false:"hide"}[!!$first || !!player.showAll]').pad-top-5
+          .mgn-top-10.italic.text-muted {{rosterCtrl.getTimeAgo(item.date)}}
+          .media.mgn-top-5
+            .pull-left
+              i.media-object.bold News
+            .media-body {{item.headline}}
+          .media.mgn-top-5
+            .pull-left
+              i.media-object.bold Spin
+            .media-body {{item.text}}
+        hr.mgn-top-5.mgn-bottom-5(data-ng-if='!$last && player.showAll')
+        div(data-ng-if='!player.showAll && $last && !$first').text-center
+          a(href='javascript:;',data-ng-click='player.showAll = !player.showAll').btn.btn-link Show more
   td(colspan="2",data-ng-if='player.id && !player.matchup && player.team != "FA"')
   td(colspan="2",data-ng-if='player.id && ((player.matchup && player.matchup.isBye) || player.team == "FA")').text-center
     span.bye-week-indicator -- BYE --

@@ -13,8 +13,8 @@ module.exports = function(app, /* authentication, */ options){
   app.use(morgan(config.get('app:express:logFormat') || 'tiny'));
   app.use(favicon(path.join(__dirname, '../../../client/img/favicon.png')));
   app.use(stylus.middleware({ src: path.join(__dirname, '../../../client') }));
-  app.use(express.static(path.join(__dirname, '../../../client')));
   app.use(compress());
+  app.use(express.static(path.join(__dirname, '../../../client'), { maxAge: 1000*60*60*24 /* one day */ }));
   app.use(bodyParser.json());
   app.use(session({
     name: config.get('app:name')+'.'+process.env.NODE_ENV+'.session',
