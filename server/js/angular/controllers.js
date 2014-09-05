@@ -231,11 +231,16 @@
             }
 
             var maxTics = (4*15*60);
-            var nsecs = (mins*60) + secs;
+            var nsecs = (15*60) - (mins*60) + secs;
             var qsecs = ((qtr-1)*15*60);
             var totalTics = nsecs + qsecs;
 
-            return parseInt((100*totalTics/maxTics), 0);
+            // console.log(nsecs);
+            // console.log(qsecs);
+            // console.log(totalTics);
+            // console.log(maxTics);
+
+            return parseInt(100*(totalTics/maxTics), 0);
           default:
             return 0;
         }
