@@ -52,7 +52,7 @@ module.exports = function(app){
       app.listen(port, config.get('app:host'), function(){ // Fire up the app
         logger.debug("Debug logging enabled.");
         logger.info('Configuration loaded using: ['+config.get('baseConfig')+', '+config.get('envConfig')+']');
-        logger.info('Database connection now open at:', dbUri);
+        // logger.info('Database connection now open at:', dbUri);
         logger.info("Application (" + config.get('app:name') + ") started on "+config.get('app:host')+':'+port);
       });
     }

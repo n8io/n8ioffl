@@ -24,6 +24,13 @@
     "espnnfl": {
       "uri": "http://espnnfl.herokuapp.com",
       "apiKey": ""
+    },
+    "fantasydata": {
+      "protocol": "http",
+      "url": "api.nfldata.apiphany.com",
+      "level": "developer",
+      "timeout": 10000,
+      "key": ""
     }
   },
   "tracking": {
@@ -68,6 +75,8 @@
     "services:espnffl:uri",
     "services:espnffl:apiKey",
     "services:espnnfl:uri",
-    "services:espnnfl:apiKey"
+    "services:espnnfl:apiKey",
+    "services:fantasydata:level",
+    "services:fantasydata:key"
   ]
 }
