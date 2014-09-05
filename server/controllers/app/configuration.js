@@ -29,7 +29,8 @@ module.exports = function(){
   // Read in known env variables
   var envVars = [
     {'apiKey': 'services:espnffl:apiKey'},
-    {'apiKey_espnnfl': 'services:espnnfl:apiKey'}
+    {'apiKey_espnnfl': 'services:espnnfl:apiKey'},
+    {'apiKey_fantasydata': 'services:fantasydata:key'}
   ];
 
   _(envVars).each(function(ev){
