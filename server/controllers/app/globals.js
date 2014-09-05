@@ -12,3 +12,4 @@ passport = require('passport');
 flash = require('connect-flash');
 security = require('./security');
 helpers = require('./helpers');
+fantasyData = require('fantasydata-api');
