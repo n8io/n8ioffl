@@ -190,17 +190,23 @@
           return p;
         });
 
-        console.log(roster);
+        // console.log(roster);
         return roster;
       };
 
       vm.parsePercentComplete = function(status){
         if(!status) return 0;
 
+        if(status.toLowerCase().indexOf('half') > -1) return 50;
+
+        if(status.toLowerCase().indexOf('final') > -1) return 100;
+        if(status.toLowerCase().indexOf('ot') > -1) return 100;
+
         switch(status.split(' ').length){
           case 1:
             return 100;
           case 2:
+            if(status.toLowerCase().indexOf('f') > -1) return 100;
             return 0;
           case 3:
             var splits = status.split(' ');
