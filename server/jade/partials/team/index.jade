@@ -1,7 +1,7 @@
 .div(data-ng-controller='Roster_Controller as rosterCtrl')
   | <script type='text/ng-template' id='playerHeader.html'>
   th.width-30 POS
-  th.width-15.hidden-xs
+  th.width-15.hidden-ss
   th Player
   th.width-40.text-center OPP
   th.width-80.text-center STATUS
@@ -15,7 +15,7 @@
   td(data-ng-if='!player.id',colspan="4").text-center.text-muted
     | -- empty --
   td(data-ng-if='player.id') {{player.fantasyPosition == 'RB/WR' ? 'RW' : player.fantasyPosition}}
-  td.text-center.hidden-xs(data-ng-if='player.id')
+  td.text-center.hidden-ss(data-ng-if='player.id')
     span(data-ng-if='player.injury', title='{{player.injury.status}}')
       span(data-ng-class='player.injury.key').injury-status
         i.fa.fa-fw.fa-square
@@ -24,7 +24,7 @@
         i.fa.fa-fw.fa-square
   td(data-ng-if='player.id')
     .fade-overflow-small
-      .float-left.text-center
+      .float-left.text-center.hidden-ss
         img(data-ng-if='!!player.team',data-ng-src='/img/logos/{{player.team.toLowerCase()}}.svg').nfl-team-logo
         div(data-ng-if='!!!player.team')
       a(href='javascript:;',data-player-id='{{player.id}}', data-toggle='collapse', data-target='#player-details-{{player.id}}').float-left.mgn-left-5.hidden-xs
