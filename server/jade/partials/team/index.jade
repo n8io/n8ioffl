@@ -108,8 +108,12 @@
     span(data-ng-if='player.matchup.isHome') vs
     a(href='javascript:;')
       img(data-ng-src='/img/logos/{{player.matchup.opponent.toLowerCase()}}.svg', title='{{player.matchup.opponent}}').nfl-team-logo
-  td(data-ng-if='player.id && player.matchup && !player.matchup.isBye && player.team != "FA"').text-center
-    span {{player.matchup.status}}
+  td(data-ng-if='player.id && player.matchup && !player.matchup.isBye && player.team != "FA"').text-center.position-relative
+    span.font-size-tinier(data-ng-if='!player.matchup.percentComplete').position-absolute.center-x-y.width-90 {{player.matchup.status}}
+    .progress(data-ng-if='player.matchup.percentComplete && player.matchup.percentComplete < 100').game-progress
+      .progress-bar.progress-bar-success(aria-valuenow='{{player.matchup.percentComplete}}',aria=valuemin='0',aria-valuemax='100',style='width:{{player.matchup.percentComplete}}%;')
+    .progress(data-ng-if='player.matchup.percentComplete == 100').game-progress
+      .progress-bar(aria-valuenow='100',aria=valuemin='0',aria-valuemax='100',style='width:100%;')
   | </script>
   .mgn-bottom-10
     .float-left

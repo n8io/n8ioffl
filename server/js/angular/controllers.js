@@ -126,7 +126,7 @@
         }
 
         vm.team = UiService.current.team = results.getRoster.team;
-        vm.roster = UiService.current.roster = results.getRoster.roster;
+        vm.roster = UiService.current.roster = vm.calculatePercentGameComplete(results.getRoster.roster);
         vm.league = UiService.current.league = results.getLeague.league;
         vm.leagueId = UiService.current.leagueId = results.getSettings.league.id;
         vm.settings = UiService.current.settings = results.getSettings.settings;
@@ -171,6 +171,74 @@
         }, function(err){
           vm.errors.push({reason: 'Could not retrieve league member information at this time. Please try back later.'});
         });
+      };
+
+      vm.calculatePercentGameComplete = function(roster){
+        if(!roster) return roster;
+
+        roster.starters = _(roster.starters).map(function(p){
+          if(p.matchup){
+            p.matchup.percentComplete = vm.parsePercentComplete(p.matchup.status);
+          }
+          return p;
+        });
+
+        roster.bench = _(roster.bench).map(function(p){
+          if(p.matchup){
+            p.matchup.percentComplete = vm.parsePercentComplete(p.matchup.status);
+          }
+          return p;
+        });
+
+        console.log(roster);
+        return roster;
+      };
+
+      vm.parsePercentComplete = function(status){
+        if(!status) return 0;
+
+        switch(status.split(' ').length){
+          case 1:
+            return 100;
+          case 2:
+            return 0;
+          case 3:
+            var splits = status.split(' ');
+            var score = splits[0];
+            var timeLeft = splits[1];
+            var qtrStr = splits[2];
+
+            var mins = parseInt(timeLeft.split(':')[0], 0);
+            var secs = parseInt(timeLeft.split(':')[1], 0);
+
+            var qtr = 4;
+            switch(qtrStr[0]){
+              case '1':
+                qtr = 1;
+                break;
+              case '2':
+                qtr = 2;
+                break;
+              case '3':
+                qtr = 3;
+                break;
+              case '4':
+                qtr = 4;
+                break;
+              default:
+                qtr = 5;
+                break;
+            }
+
+            var maxTics = (4*15*60);
+            var nsecs = (mins*60) + secs;
+            var qsecs = ((qtr-1)*15*60);
+            var totalTics = nsecs + qsecs;
+
+            return parseInt((100*totalTics/maxTics), 0);
+          default:
+            return 0;
+        }
       };
 
       vm.populateEmptyRosterSlots = function(actualStarters, settings){
