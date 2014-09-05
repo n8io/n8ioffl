@@ -72,8 +72,12 @@ img.main-logo
 
 .text-shadow-eee
   text-shadow 1px 1px #eee
+.text-shadow-555
+  text-shadow 1px 1px #555
 .color-777
   color #777
+.progress-bar-dim
+  background-color #ACACAC
 
 .width-initial
   width initial!important
@@ -102,16 +106,18 @@ tr.alert-bad-player
 .bg-color-fff
   background-color #fff
 
+.game-progress
+  height 15px
+  margin-top 5px
+  margin-bottom 0px
+
 @media(max-width:480px)
   .hidden-ss
     display none
+  .game-progress
+    margin-top 3px
 
 .table-striped>tbody>tr:nth-child(odd)>td
   fade-overflow('small', transparent, #F9F9F9)
 .table-hover>tbody>tr:hover>td
   fade-overflow('small', transparent, #F5F5F5)
-
-.game-progress
-  height 15px
-  margin-top 5px
-  margin-bottom 0px
