@@ -78,5 +78,10 @@
     "services:espnnfl:apiKey",
     "services:fantasydata:level",
     "services:fantasydata:key"
+  ],
+  "__env": [
+    { "apiKey": "services:espnffl:apiKey" },
+    { "apiKey_espnnfl": "services:espnnfl:apiKey" },
+    { "apiKey_fantasydata": "services:fantasydata:key" }
   ]
 }

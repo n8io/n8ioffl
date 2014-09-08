@@ -27,12 +27,7 @@ module.exports = function(){
   config.set('baseConfig', configFileBaseName +  '.base.json');
 
   // Read in known env variables
-  var envVars = [
-    {'apiKey': 'services:espnffl:apiKey'},
-    {'apiKey_espnnfl': 'services:espnnfl:apiKey'},
-    {'apiKey_fantasydata': 'services:fantasydata:key'}
-  ];
-
+  var envVars = config.get('__env') || [];
   _(envVars).each(function(ev){
     var key = _(ev).keys()[0];
     var eVal = process.env[key];
